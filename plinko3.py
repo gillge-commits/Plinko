@@ -2,9 +2,9 @@ import random
 import math
 import gamble
 
-# function to make the board
+
 def make_board(rows, columns, centre, board, holes, number_of_holes):
-    """ adds a . to every second point in the triangle to represent pegs and adds everytime based on how far away from the centre (-1)"""
+    """ Sets up the board """
     # set every second spot to a peg
     for i in range(rows):
         start = centre - i
@@ -18,11 +18,9 @@ def make_board(rows, columns, centre, board, holes, number_of_holes):
         distance = abs(i - holes_centre)
         holes[i] = round(-1 + distance * ((rows + 1) / holes_centre), 2)
 
-        
-
-# function to make ball drop
+    
 def release_ball(start_index, centre, board, rows):
-    """ moves the x index to the left or the right randomly, moves y down"""
+    """ Moves the ball down the board """
     ways = ['L', 'R']
     x_index = centre + start_index
     for y_index in range (rows):
@@ -35,19 +33,15 @@ def release_ball(start_index, centre, board, rows):
     return x_index
 
 
-
-# function to calculate winnings
-
 def winnings_calculator(wager, x_index, holes):
-    """ multiplies the uses wager by the hole it falls into"""
+    """ Calculates the winnings or loss """
     hole_index = x_index // 2
     winnings = wager * holes[hole_index]
     return winnings
  
 
-# function to show board
 def show_board(rows, columns, board):
-    """ prints a line of the board one by one"""
+    """ Prints a line of the board one by one"""
     for i in range(rows):
         my_string = ""
         for j in range(columns):
@@ -55,7 +49,6 @@ def show_board(rows, columns, board):
         print(my_string)
 
 
-# function for robustness
 def proper_input():
     """ asks for a valid number until it recives one"""
     improper = True
@@ -69,6 +62,9 @@ def proper_input():
                 return recieved_input
         except ValueError:
             print("That is not a valid number, try again")
+
+
+
 
 def main():
     
@@ -134,10 +130,12 @@ def main():
 
         # ask if player wants to gamble if they made money
         if winnings > 0:
-            gamble = input("Would you like to gamble your winnings? ")
-            if gamble == "Y":
+            gamble_choice = input("Would you like to gamble your winnings? (Y/N) ")
+            if gamble_choice == "Y":
                 # run gamble
-                pass
+                gamble_multiplier = gamble.play()
+                print("Your final winnings is ${}.".format(winnings * gamble_multiplier))
+                
 
         # ask if player wants to play again
 
@@ -146,6 +144,5 @@ def main():
             play = False
 
 if __name__ == "__main__":
-    gamble.test()
     main()
 

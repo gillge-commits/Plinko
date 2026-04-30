@@ -35,11 +35,12 @@ def interaction(prompt, card):
 
     
         
-if __name__ == "__main__":
+def play():
     # intilise
     
     cards = []
     suits = ["Hearts", "Spades", "Diamonds", "Clubs"]
+    multiplier = 1
 
     # call deck function
     form_deck(cards, suits)
@@ -60,6 +61,7 @@ if __name__ == "__main__":
         # tell player if they have won or not
         if(card_colour == guess.upper()):
             print("You have doubled your money!")
+            multiplier *= 2
             
             # ask user to play the second round
             user_answer = input("Double or nothing?? (Y/N) ")
@@ -75,12 +77,18 @@ if __name__ == "__main__":
                 # if player is right show them
                 if guess.upper() == card_suit.upper():
                     print("You have quadrubled your money!!!")
+                    multiplier *= 2
                 else:
                     print("Oh no, you have lost all your winnings.")
+                    multiplier = 0
+
                 
 
         else:
             print("Oh no, you have lost all your winnings.")
+            multiplier = 0
+
+    return multiplier
 
         
             
