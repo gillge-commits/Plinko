@@ -64,12 +64,70 @@ def proper_input():
             print("That is not a valid number, try again")
 
 
+def get_player_profile():
+    """ Gets input from the user """
+    print("New user detected.")
+    name = input("Player name: ")
+    location = input("Player location: ")
+    return name, location
 
 
-def main():
+def set_up_profile(name, loco):
+    """ Add all of players info to a dictionary"""
+    player_profile = {"name": name, "location": loco, "high_score": 0,
+                      "lifetime_losses": 0}
+    return player_profile
+
+
+def check_if_player_registered(players, target):
+    """ Check if a player is already registered"""
+
+    for i, player in enumerate(players):
+        if player["name"] == target:
+            return player["name"], i
+        
+    return False, -1
+
+def check_marketing_status(player_num, players):
+    """ Checks if the player has over 500 lifelong losses"""
+    if players[player_num]["lifetime_losses"] >= 500:
+        return True
+    else:
+        return False
     
+    
+    
+    
+    
+def main():
+    players = [{"name": "zena", "location": "wellington", "high_score": 100,
+                      "lifetime_losses": 10},
+               {"name": "georgia", "location": "auckland", "high_score": 20000,
+                      "lifetime_losses": 20000},
+               {"name": "carmen", "location": "hamilton", "high_score": 7000,
+                      "lifetime_losses": 10000}
+               ]
+            
     play = True
     while play == True:
+
+    # welcome players to PLINK0
+
+        name = input("Welcome to PLINK0, please enter your name: ")
+        already_in, number_in = check_if_player_registered(players, name)
+
+        if already_in == False:
+            new_player_name, new_player_loco = get_player_profile()
+            new_profile = set_up_profile(new_player_name, new_player_loco)
+            players.append(new_profile)
+            print("You're all check in!")
+
+        else:
+            print("Welcome back {}!".format(already_in))
+            if check_marketing_status(number_in, players) == True:
+                print("Congrats you are life time member! Recieve a free drink with your next win!")
+                players[number_in]["targeted_ads"] = True
+
 
         # define variables and lists
 
@@ -122,24 +180,31 @@ def main():
 
         if winnings > 0:
             print("Congrats you have won ${:.2f}!".format(winnings))
+            if winnings > players[number_in]["high_score"]:
+                print("Congrats new highscore!")
+                players[number_in]["high_score"] = winnings
         elif winnings < 0:
             print("Sorry you have lost ${:.2f}...".format(winnings * -1 ))
+            players[number_in]["lifetime_losses"] += winnings
         else:
             print("You have not lost or made any money!")
         pass
 
         # ask if player wants to gamble if they made money
         if winnings > 0:
-            gamble_choice = input("Would you like to gamble your winnings? (Y/N) ")
+            gamble_choice = input("Would you like to gamble your winnings? (Y/N) ").upper()
             if gamble_choice == "Y":
                 # run gamble
                 gamble_multiplier = gamble.play()
                 print("Your final winnings is ${}.".format(winnings * gamble_multiplier))
-                
+                if winnings > players[number_in]["high_score"]:
+                    print("Congrats new highscore!")
+                    players[number_in]["high_score"] = winnings
 
+
+        
         # ask if player wants to play again
-
-        play_again = input("Do you want to play again (Y/N)? ")
+        play_again = input("Do you want to play again (Y/N)? ").upper()
         if play_again.upper() == "N":
             play = False
 
